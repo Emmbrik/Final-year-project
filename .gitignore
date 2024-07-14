@@ -1,2 +1,5 @@
 Data_viz_Suggestions.docx
 app_2.py
+.gitignore
+~$*.docx
+~$*.tmp
