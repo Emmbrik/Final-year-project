@@ -4,6 +4,14 @@ from data_loader import load_data
 # Loading the data
 data = load_data()
 
+# Passing the Data into Variables
+Academic_Performance = data["Academic_Performance"]
+Biodata = data["Biodata"]
+First_and_Last_Result = data["First_and_Last_Result"]
+Registration = data["Registration"]
+Result_Sheet = data["Result_Sheet"]
+
+
 # Page title and introduction
 st.title("Student Registration")
 

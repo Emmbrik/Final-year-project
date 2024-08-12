@@ -11,12 +11,12 @@ def load_data():
     Biodata = pd.read_excel(file_path, sheet_name='Biodata')
     First_and_Last_Result = pd.read_excel(file_path, sheet_name='First_and_Last_Result')
     Registration = pd.read_excel(file_path, sheet_name='Registration')
-    Result_sheet = pd.read_excel(file_path, sheet_name='Result_sheet')
+    Result_Sheet = pd.read_excel(file_path, sheet_name='Result_sheet')
     
     return {
         "Academic_Performance": Academic_Performance,
         "Biodata": Biodata,
         "First_and_Last_Result": First_and_Last_Result,
         "Registration": Registration,
-        "Result_sheet": Result_sheet
+        "Result_Sheet": Result_Sheet
     }
