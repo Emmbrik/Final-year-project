@@ -1,5 +1,12 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.express as px
+import plotly.graph_objects as go
 import streamlit as st
 from data_loader import load_data
+
 
 # Loading the data
 data = load_data()
@@ -43,16 +50,60 @@ Explore the data and uncover the stories behind the numbers!
 """)
 
 
+st.markdown("<br><br><br>", unsafe_allow_html=True)
+
+
 # Visualizations
 st.write("# Data Visualizations")
 st.write("This is where the visualizations and detailed analysis will be displayed.")
 
 
+st.markdown("<br><br><br>", unsafe_allow_html=True)
+
+#------------------------------ Total Number of Students by Session ------------------------------
+
+# Correcting the wrong entries in the Session column
+Registration['Session'] = Registration['Session'].replace({
+    '90-92': '1990-1991',
+    '97/98': '1997-1998'
+})
+
+# Grouping the data by 'Session' and counting the number of unique 'Matric_Number'
+students_by_session = Registration.groupby('Session')['Matric_Number'].nunique().reset_index()
+
+# Creating the line chart using Plotly Express
+fig = px.line(students_by_session, 
+              x='Session', 
+              y='Matric_Number', 
+              title='Trend of Number of Students by Session',
+              labels={'Matric_Number': 'Number of Students', 'Session': 'Session'})
+
+# Customizing the line color
+fig.update_traces(line=dict(color='#DE6A73'))
+
+# Displaying the chart in Streamlit
+st.plotly_chart(fig)
 
 
 
-def app(data):
-    st.title("Enrollment Trend")
-    st.write("Welcome to the Enrollment Trend Report")
+st.markdown("<br><br><br>", unsafe_allow_html=True)
 
-    st.write(data['Biodata'])
+#------------------------- Trend of Admitted Students by Year of Admissio --------------------------
+
+
+# Grouping the data by 'Session' and counting the number of unique 'Matric_Number'
+students_by_YOA = Biodata.groupby('YOA')['Matric_Number'].nunique().reset_index()
+
+# Creating the line chart using Plotly Express
+fig = px.line(students_by_YOA, 
+              x='YOA', 
+              y='Matric_Number', 
+              title='Trend of Admitted Students by Year of Admission',
+              labels={'Matric_Number': 'Number of Admitted Students', 'YOA': 'Year of Admission'})
+
+# Customizing the line color
+fig.update_traces(line=dict(color='#DE6A73'))
+
+# Displaying the chart in Streamlit
+st.plotly_chart(fig)
+

@@ -1,10 +1,13 @@
 import pandas as pd
+import os
 import streamlit as st
+
+base_dir = os.path.dirname(__file__)
+file_path = os.path.join(base_dir, 'Student_Data.xlsx')
 
 @st.cache_data
 def load_data():
     # Load the Excel file
-    file_path = "../data/Student_Data.xlsx"
     
     # Load the individual sheets into dataframes
     Academic_Performance = pd.read_excel(file_path, sheet_name='Academic_Performance')

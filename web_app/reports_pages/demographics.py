@@ -4,9 +4,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
 import plotly.graph_objects as go
-
 import streamlit as st
 from data_loader import load_data
+import os
 
 # Loading the data
 data = load_data()
@@ -194,15 +194,15 @@ def create_doughnut_chart(labels, values, title, annotation):
         annotations=[dict(
             text=annotation, 
             x=0.5, y=0.5, 
-            font_size=20, 
+            font_size=16, 
             showarrow=False, 
             font_color="black"  # Change this color to improve visibility
         )],
         paper_bgcolor="white",  # Background color of the entire figure
         plot_bgcolor="white",  # Background color of the plotting area
         margin=dict(t=60, b=40, l=40, r=40),  # Adjust the margins as needed
-        height=400,  # Height of the box
-        width=400,   # Width of the box
+        height=300,  # Height of the box
+        width=300,   # Width of the box
     )
     
     return fig
@@ -246,7 +246,7 @@ def plot_vertical_bar_chart(dataframe, column, color):
     sns.barplot(x=counts.index, y=counts.values, palette=[color])
     plt.xlabel(column)
     plt.ylabel('Number of Students')
-    plt.title(f'Students by {column}')
+    plt.title(f'Number of Students by {column}')
     for p in plt.gca().patches:
         plt.annotate(f'{p.get_height()}', (p.get_x() + p.get_width() / 2, p.get_height() + 0.2),
                      va='bottom', ha='center', fontsize=10, color='black')
