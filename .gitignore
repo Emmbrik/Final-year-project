@@ -5,3 +5,4 @@ app_2.py
 ~$*.tmp
 experimenting/
 .gitignore
+*_dup.py

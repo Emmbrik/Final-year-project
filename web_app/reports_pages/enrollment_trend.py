@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
 import plotly.graph_objects as go
+import altair as alt
 import streamlit as st
 from data_loader import load_data
 
@@ -55,10 +56,8 @@ st.markdown("<br><br><br>", unsafe_allow_html=True)
 
 # Visualizations
 st.write("# Data Visualizations")
-st.write("This is where the visualizations and detailed analysis will be displayed.")
 
-
-st.markdown("<br><br><br>", unsafe_allow_html=True)
+st.markdown("<br>", unsafe_allow_html=True)
 
 #------------------------------ Total Number of Students by Session ------------------------------
 
@@ -88,7 +87,8 @@ st.plotly_chart(fig)
 
 st.markdown("<br><br><br>", unsafe_allow_html=True)
 
-#------------------------- Trend of Admitted Students by Year of Admissio --------------------------
+
+#------------------------- Trend of Admitted Students by Year of Admission --------------------------
 
 
 # Grouping the data by 'Session' and counting the number of unique 'Matric_Number'
@@ -107,3 +107,58 @@ fig.update_traces(line=dict(color='#DE6A73'))
 # Displaying the chart in Streamlit
 st.plotly_chart(fig)
 
+
+st.markdown("<br><br><br>", unsafe_allow_html=True)
+
+
+
+
+#------------------- Number of Admitted Students by Year of Admission and Gender --------------------
+
+# Assuming Biodata is already loaded as a DataFrame
+# Group by YOA and Sex, and count the number of students
+biodata_grouped = Biodata.groupby(['YOA', 'Sex']).size().reset_index(name='count')
+
+# Sort by YOA in descending order based on the total number of students admitted
+biodata_grouped['YOA'] = pd.Categorical(
+    biodata_grouped['YOA'], 
+    categories=biodata_grouped.groupby('YOA')['count'].sum().sort_values(ascending=False).index,
+    ordered=True
+)
+
+# Create the base chart with stacked bars
+bars = alt.Chart(biodata_grouped).mark_bar().encode(
+    x=alt.X('count:Q', title='Number of Students'),
+    y=alt.Y('YOA:O', sort='-x', title='Year of Admission (YOA)'),
+    color=alt.Color('Sex:N', scale=alt.Scale(range=['#E1C233', '#DE6A73']), title='Gender'),
+    order=alt.Order('Sex:N', sort='ascending'),
+    tooltip=['YOA', 'Sex', 'count']
+)
+
+# Create text labels for the bars with improved visibility
+text = alt.Chart(biodata_grouped).mark_text(
+    dx=-8,  # Slight adjustment to avoid overlapping with bar edges
+    color='black'  # Set the label color to black for better visibility
+).encode(
+    x=alt.X('count:Q', stack='zero'),  # Use stack='zero' to align text with stacked bars
+    y=alt.Y('YOA:O', sort='-x'),
+    text=alt.Text('count:Q', format='.0f')  # Display the count as text
+)
+
+# Combine the bar chart and text labels
+chart = (bars + text).properties(
+    title='Number of Students Admitted by Year and Gender',
+    width=600,
+    height=600
+).configure_axis(
+    labelFontSize=12,
+    titleFontSize=14
+).configure_title(
+    fontSize=16
+).configure_legend(
+    titleFontSize=12,
+    labelFontSize=10
+)
+
+# Display the chart in Streamlit
+st.altair_chart(chart, use_container_width=True)
