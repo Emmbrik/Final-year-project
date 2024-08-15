@@ -126,6 +126,8 @@ biodata_grouped['YOA'] = pd.Categorical(
     ordered=True
 )
 
+plot_height = st.slider('Adjust plot height for Visibility', min_value=100, max_value=800, value=400)
+
 # Create the base chart with stacked bars
 bars = alt.Chart(biodata_grouped).mark_bar().encode(
     x=alt.X('count:Q', title='Number of Students'),
@@ -149,7 +151,7 @@ text = alt.Chart(biodata_grouped).mark_text(
 chart = (bars + text).properties(
     title='Number of Students Admitted by Year and Gender',
     width=600,
-    height=600
+    height=plot_height
 ).configure_axis(
     labelFontSize=12,
     titleFontSize=14

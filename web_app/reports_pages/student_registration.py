@@ -71,13 +71,13 @@ custom_sort_order = [
 selected_sessions = st.multiselect(
     'Select Sessions',
     options=custom_sort_order,
-    default=custom_sort_order  # Show all by default
+    default=None  # Show all by default
 )
 
 selected_levels = st.multiselect(
     'Select Levels',
     options=sorted(Registration['Level'].unique()),
-    default=sorted(Registration['Level'].unique())  # Show all by default
+    default= None #sorted(Registration['Level'].unique())  # Show all by default
 )
 
 # Ensure that if no filters are selected, all data is used
@@ -123,7 +123,7 @@ for level in sorted(filtered_data['Level'].unique()):
     ))
 
 # Create a slider to adjust the height of the plot
-plot_height = st.slider('Adjust plot height for Visibility', min_value=800, max_value=2500, value=1200)
+plot_height = st.slider('Adjust plot height for Visibility', min_value=100, max_value=2500, value=1200)
 
 # Update layout to group bars, remove background, and customize axis
 fig.update_layout(

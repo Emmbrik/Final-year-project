@@ -1,5 +1,8 @@
 import streamlit as st
 from data_loader import load_data
+import streamlit as st
+import pandas as pd
+import plotly.graph_objects as go
 
 # Loading the data
 data = load_data()
@@ -37,17 +40,10 @@ st.write("# Data Visualizations")
 st.write("This is where the visualizations and detailed analysis will be displayed.")
 
 
-
-
-
-import streamlit as st
-import pandas as pd
-import plotly.graph_objects as go
-
-# Ensure Level column is consistently an integer
+# Ensuring Level column is consistently an integer
 Result_Sheet['Level'] = pd.to_numeric(Result_Sheet['Level'], errors='coerce').fillna(0).astype(int)
 
-# Define the sorting order for Course Titles based on the total number of distinct Matric_Number
+# Defining the sorting order for Course Titles based on the total number of distinct Matric_Number
 course_sort_order = Result_Sheet.groupby('Course_Title')['Matric_Number'].nunique().sort_values(ascending=False).index.tolist()
 
 # Define the color mapping for grades
@@ -60,26 +56,26 @@ grade_colors = {
     'F': '#744EC2'
 }
 
-# Create filters for Course Title, Session, and Level
+# Creating filters for Course Title, Session, and Level
 selected_courses = st.multiselect(
     'Select Course Titles',
-    options=sorted(course_sort_order),
-    default=sorted(course_sort_order)
+    options=course_sort_order,
+    default=None  # No default selection
 )
 
 selected_sessions = st.multiselect(
     'Select Sessions',
     options=sorted(Result_Sheet['Session'].unique()),
-    default=sorted(Result_Sheet['Session'].unique())
+    default=None  # No default selection
 )
 
 selected_levels = st.multiselect(
     'Select Levels',
     options=sorted(Result_Sheet['Level'].unique()),
-    default=sorted(Result_Sheet['Level'].unique())
+    default=None  # No default selection
 )
 
-# Ensure that if no filters are selected, all data is used
+# Ensuring that if no filters are selected, the entire dataset is used
 if not selected_courses:
     selected_courses = course_sort_order
 if not selected_sessions:
@@ -87,25 +83,25 @@ if not selected_sessions:
 if not selected_levels:
     selected_levels = sorted(Result_Sheet['Level'].unique())
 
-# Filter the data based on user selection
+# Filtering the data based on user selection
 filtered_df = Result_Sheet[
     (Result_Sheet['Course_Title'].isin(selected_courses)) &
     (Result_Sheet['Session'].isin(selected_sessions)) &
     (Result_Sheet['Level'].isin(selected_levels))
 ]
 
-# Group the data by Course_Title and Grade and count distinct Matric_Number
+# Grouping the data by Course_Title and Grade and count distinct Matric_Number
 grouped_filtered_df = filtered_df.groupby(['Course_Title', 'Grade'])['Matric_Number'].nunique().reset_index()
 grouped_filtered_df.columns = ['Course_Title', 'Grade', 'Distinct_Students']
 
-# Sort the data: first by Course_Title, then by Distinct_Students within each Course_Title
+# Sorting the data: first by Course_Title, then by Distinct_Students within each Course_Title
 grouped_filtered_df['Course_Title'] = pd.Categorical(grouped_filtered_df['Course_Title'], categories=course_sort_order, ordered=True)
 grouped_filtered_df = grouped_filtered_df.sort_values(['Course_Title', 'Distinct_Students'], ascending=[True, False])
 
-# Create the grouped horizontal bar chart
+# Creating the grouped horizontal bar chart
 fig = go.Figure()
 
-# Add a trace for each Grade
+# Adding a trace for each Grade
 for grade in ['A', 'B', 'C', 'D', 'E', 'F']:
     grade_data = grouped_filtered_df[grouped_filtered_df['Grade'] == grade]
     fig.add_trace(go.Bar(
@@ -118,10 +114,10 @@ for grade in ['A', 'B', 'C', 'D', 'E', 'F']:
         textposition='outside'
     ))
 
-# Create a slider to adjust the height of the plot
-plot_height = st.slider('Adjust plot height for Visibility', min_value=10000, max_value=25000, value=12000)
+# Creating a slider to adjust the height of the plot
+plot_height = st.slider('Adjust plot height for Visibility', min_value=1000, max_value=25000, value=12000)
 
-# Update layout to group bars, remove background, and customize axes
+# Updating layout to group bars, remove background, and customize axes
 fig.update_layout(
     barmode='group',
     xaxis_title='Number of Distinct Students',
@@ -143,9 +139,8 @@ fig.update_layout(
     showlegend=True,
     legend_title='Grade',
     height=plot_height,
-    #margin=dict(l=20, r=50, t=50, b=50)
+   # margin=dict(l=50, r=50, t=50, b=50)
 )
 
 # Display the chart in Streamlit
 st.plotly_chart(fig, use_container_width=True)
-
