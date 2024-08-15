@@ -123,12 +123,12 @@ for level in sorted(filtered_data['Level'].unique()):
         marker_color=level_colors.get(level, '#000000'),  # Default color if level not in dictionary
         orientation='h',
         text=level_data['Distinct_Students'],
-        textposition='outside',  # Ensure text is visible outside of the bars
-        textfont=dict(color='black')  # Set text color to black
+        textposition='outside',  # Place text outside the bars
+        textfont=dict(color='white', size=14)  # Set text color and size
     ))
 
 # Create a slider to adjust the height of the plot
-plot_height = st.slider('Adjust plot height', min_value=600, max_value=1600, value=800)
+plot_height = st.slider('Adjust plot height', min_value=800, max_value=1800, value=1000)
 
 # Update layout to group bars, remove background, and customize axis
 fig.update_layout(
