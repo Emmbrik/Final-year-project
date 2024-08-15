@@ -2,6 +2,7 @@ import streamlit as st
 from data_loader import load_data
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 
 # Loading the data
 data = load_data()
@@ -47,28 +48,21 @@ st.write("# Data Visualizations")
 
 st.markdown("<br><br><br>", unsafe_allow_html=True)
 
-
-import streamlit as st
-import pandas as pd
-import plotly.graph_objects as go
-
-# Assuming the Registration dataframe is already loaded
-
-# Replace session labels with desired format
+# Replacing session labels with desired format
 session_mapping = {
     '97/98': '1997-1998',
     '90-92': '1990-1991'
     # Add other mappings as necessary
 }
 
-# Apply the session mapping
+# Applying the session mapping
 Registration['Session'] = Registration['Session'].replace(session_mapping)
 
-# Define the custom sorting order for sessions from 1990 to 2011
+# Defining the custom sorting order for sessions from 1990 to 2011
 custom_sort_order = [
-    '1990-1991', '1991-1992', '1992-1993', '1993-1994', '1994-1995',
+    '1990-1991', '1991-1992', '1992-1993',  '1994-1995',
     '1995-1996', '1996-1997', '1997-1998', '1998-1999', '1999-2000',
-    '2000-2001', '2001-2002', '2002-2003', '2003-2004', '2004-2005',
+    '2000-2001', '2001-2002', '2002-2003', '2003-2004', 
     '2005-2006', '2006-2007', '2007-2008', '2008-2009', '2009-2010',
     '2010-2011'
 ]
@@ -119,21 +113,22 @@ for level in sorted(filtered_data['Level'].unique()):
     fig.add_trace(go.Bar(
         y=level_data['Session'],
         x=level_data['Distinct_Students'],
-        name=f'Level {level}',
+        name=f'{level}L',
         marker_color=level_colors.get(level, '#000000'),  # Default color if level not in dictionary
         orientation='h',
         text=level_data['Distinct_Students'],
-        textposition='outside',  # Place text outside the bars
-        textfont=dict(color='white', size=14)  # Set text color and size
+        textposition='outside',  # Ensure text is visible outside of the bars
+        #textangle=0,
+        #textfont=dict(size=80, color='black')  # Set text color to black and size for visibility
     ))
 
 # Create a slider to adjust the height of the plot
-plot_height = st.slider('Adjust plot height', min_value=800, max_value=1800, value=1000)
+plot_height = st.slider('Adjust plot height for Visibility', min_value=800, max_value=2500, value=1200)
 
 # Update layout to group bars, remove background, and customize axis
 fig.update_layout(
     barmode='group',
-    xaxis_title='Number of Distinct Students',
+    xaxis_title='Number of Students',
     yaxis_title='Session',
     yaxis=dict(
         categoryorder='array',
@@ -150,9 +145,15 @@ fig.update_layout(
     plot_bgcolor='rgba(0,0,0,0)',  # Remove background color
     paper_bgcolor='rgba(0,0,0,0)',  # Remove paper background color
     showlegend=True,
+    legend_title = 'Level',
     height=plot_height,  # Use height from the slider
     margin=dict(l=50, r=50, t=50, b=50)  # Adjust margins to make space for labels
 )
 
 # Display the chart in Streamlit
 st.plotly_chart(fig, use_container_width=True)
+
+
+
+
+
