@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 from data_loader import load_data
+import plotly.express as px
+import plotly.graph_objects as go
 
 # Loading the data
 data = load_data()
@@ -49,15 +51,9 @@ Explore the data to uncover trends, identify areas for improvement, and celebrat
 # Data Visualization
 st.write("# Visualization")
 
+st.write("<br><br>", unsafe_allow_html=True)
 
 
-
-import streamlit as st
-import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
-
-# Assuming the dataframes are already loaded
 df_academic = Academic_Performance.copy()
 df_result = Result_Sheet.copy()
 
@@ -214,12 +210,8 @@ else:
     plot_height = st.slider('Adjust plot height for Visibility', min_value=400, max_value=3000, value=1300)
     cgpa_count_page = cgpa_count
 
-# You can now plot the paginated data (cgpa_count_page) or perform any other operation with it
 
 
-
-
-# Corrected Bar Chart Implementation Using plotly.graph_objects
 fig3 = go.Figure()
 
 for cgpa_class in cgpa_order:
