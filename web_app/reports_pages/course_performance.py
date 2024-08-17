@@ -121,8 +121,6 @@ selected_levels = st.multiselect(
     default=None  # No default selection
 )
 
-# Slider to adjust the height of the plot
-#plot_height = st.slider('Adjust plot height for Visibility', min_value=100, max_value=12000, value=6000)
 
 # Ensuring that if no filters are selected, the entire dataset is used
 if not selected_courses:
@@ -163,6 +161,7 @@ melted_df = pd.melt(
 
 # Pagination logic
 if pagination_option == 'Break into Pages':
+    # Slider to adjust the height of the plot
     plot_height = st.slider('Adjust plot height for Visibility', min_value=100, max_value=1000, value=500)
     items_per_page = st.number_input(
         'Number of Items per Page',
@@ -208,6 +207,7 @@ if pagination_option == 'Break into Pages':
     # Filtering the melted_df for the selected courses on the current page
     paginated_df = melted_df[melted_df['Course_Title'].isin(paginated_courses)]
 else:
+    # Slider to adjust the height of the plot
     plot_height = st.slider('Adjust plot height for Visibility', min_value=100, max_value=12000, value=6000)
     paginated_df = melted_df
 
