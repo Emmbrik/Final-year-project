@@ -156,6 +156,10 @@ cgpa_count['Session'] = pd.Categorical(cgpa_count['Session'], categories=session
 cgpa_count['CGPA_Classification'] = pd.Categorical(cgpa_count['CGPA_Classification'], categories=cgpa_order, ordered=True)
 cgpa_count = cgpa_count.sort_values(['Session', 'CGPA_Classification'], ascending=[True, True])
 
+# Always display the first two plots
+st.plotly_chart(fig1, use_container_width=True)
+st.plotly_chart(fig2, use_container_width=True)
+
 # Pagination logic
 pagination_enabled = st.radio("Display Mode:", ('Show All', 'Use Pagination'))
 
@@ -209,6 +213,9 @@ else:
     # Slider to adjust the height of the plot
     plot_height = st.slider('Adjust plot height for Visibility', min_value=400, max_value=3000, value=1300)
     cgpa_count_page = cgpa_count
+
+# You can now plot the paginated data (cgpa_count_page) or perform any other operation with it
+
 
 
 
