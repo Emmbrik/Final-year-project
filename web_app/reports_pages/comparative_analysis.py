@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
+import plotly.express as px
 import math
 from data_loader import load_data
 
@@ -163,17 +164,52 @@ for fig in figures:
 
 
 
-
-
-
-
-
-
-
-
-
-
 st.write("<br><br><br><br><br>", unsafe_allow_html=True)
 
 # Data Visualization
-st.write("# Visualization - 2")
+st.write("# CGPA Analysis")
+
+
+
+# Plot 1: Average of First CGPA across Session
+avg_first_cgpa = First_and_Last_Result.groupby('First_Session')['First_CGPA'].mean().reset_index()
+
+fig1 = px.line(avg_first_cgpa, 
+               x='First_Session', 
+               y='First_CGPA', 
+               title="Average of First CGPA across Session")
+
+fig1.update_traces(line=dict(color='#E669B9'))
+fig1.update_layout(xaxis_tickangle=-45,
+                   xaxis_title='First Session',
+                   yaxis_title='Average First CGPA',
+                   xaxis=dict(tickfont=dict(size=12)))
+
+# Plot 2: Average of Last CGPA across Session
+avg_last_cgpa = First_and_Last_Result.groupby('Last_Session')['Last_CGPA'].mean().reset_index()
+
+fig2 = px.line(avg_last_cgpa, 
+               x='Last_Session', 
+               y='Last_CGPA', 
+               title="Average of Final Result across Session")
+
+fig2.update_traces(line=dict(color='#E669B9'))
+fig2.update_layout(xaxis_tickangle=-45,
+                   xaxis_title='Last Session',
+                   yaxis_title='Average Last CGPA',
+                   xaxis=dict(tickfont=dict(size=12)))
+
+# Plot 3: Scatter Plot of Last CGPA vs First CGPA
+fig3 = px.scatter(First_and_Last_Result, 
+                  x='First_CGPA', 
+                  y='Last_CGPA', 
+                  title="Relationship between Last CGPA and First CGPA",
+                  color_discrete_sequence=['#E669B9'])
+
+fig3.update_layout()
+
+# Display plots in Streamlit
+st.plotly_chart(fig1, use_container_width=True)
+st.plotly_chart(fig2, use_container_width=True)
+st.plotly_chart(fig3, use_container_width=True)
+
