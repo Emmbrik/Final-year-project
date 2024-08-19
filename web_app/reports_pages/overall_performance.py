@@ -44,13 +44,6 @@ performance and track the progress of graduating students by their final CGPA.
 """)
 
 
-
-import streamlit as st
-import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
-
-# Assuming the First_and_Last_Result dataframe is already loaded
 df = First_and_Last_Result.copy()
 
 # Define the session order and CGPA classification order
@@ -102,7 +95,7 @@ fig_doughnut = px.pie(
     values='Count',
     names='CGPA_Classification',
     title='Distribution of CGPA Classifications',
-    hole=0.4,
+    hole=0.5,
     color='CGPA_Classification',
     color_discrete_map=color_map
 )
@@ -127,9 +120,9 @@ cgpa_count['CGPA_Classification'] = pd.Categorical(cgpa_count['CGPA_Classificati
 cgpa_count = cgpa_count.sort_values(['Session', 'CGPA_Classification'])
 
 # Pagination logic
-pagination_enabled = st.radio("Display Mode:", ('Show All', 'Use Pagination'))
+pagination_enabled = st.radio("Display Mode:", ('Show All', 'Break into Pages'))
 
-if pagination_enabled == 'Use Pagination':
+if pagination_enabled == 'Break into Pages':
     # Slider to adjust the height of the plot
     plot_height = st.slider('Adjust plot height for Visibility', min_value=400, max_value=2000, value=600)
     num_sessions_per_page = st.number_input(
