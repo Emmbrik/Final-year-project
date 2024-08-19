@@ -1,4 +1,7 @@
 import streamlit as st
+import pandas as pd
+import plotly.graph_objects as go
+import math
 from data_loader import load_data
 
 # Loading the data
@@ -12,10 +15,10 @@ Registration = data["Registration"]
 Result_Sheet = data["Result_Sheet"]
 
 
-st.title("Overall Performance Overview")
+st.title("Comparative Analysis")
 
 st.write("""
-#### Welcome to the Overall Performance Report page.
+#### Welcome to the Comparative Analysis Report.
  
 This section provides an insightful analysis of the academic achievements 
 of students across various sessions. The primary focus here is on the 
@@ -45,19 +48,10 @@ st.write("<br><br>", unsafe_allow_html=True)
 
 
 # Data Visualization
-st.write("# Visualization")
+st.write("# Visualization - 1")
 
 st.write("<br><br>", unsafe_allow_html=True)
 
-
-import streamlit as st
-import pandas as pd
-import plotly.graph_objects as go
-import math
-
-# Load Data (assuming CSV files, replace with actual data loading)
-# Academic_Performance = pd.read_csv('Academic_Performance.csv')
-# Registration = pd.read_csv('Registration.csv')
 
 # Merging the dataframes
 merged_df = pd.merge(Academic_Performance, Registration, 
@@ -78,27 +72,33 @@ sessions = sorted(filtered_df['Session'].unique())
 sessions_per_page = 2  # Adjust this to 3 if you want 3 sessions per page
 total_pages = math.ceil(len(sessions) / sessions_per_page)
 
+# Initialize session state for pagination
+if 'current_page' not in st.session_state:
+    st.session_state.current_page = 1
+
 # Sidebar - Pagination Controls
 pagination_cols = st.sidebar.columns([1, 2, 1])
 with pagination_cols[0]:
-    prev_page = st.button("Previous")
+    if st.button("Back"):
+        if st.session_state.current_page > 1:
+            st.session_state.current_page -= 1
+
 with pagination_cols[1]:
-    current_page = st.number_input("Page", min_value=1, max_value=total_pages, value=1, step=1, format="%d")
+    st.session_state.current_page = st.number_input(
+        "Page", min_value=1, max_value=total_pages, 
+        value=st.session_state.current_page, step=1, format="%d"
+    )
+
 with pagination_cols[2]:
-    next_page = st.button("Next")
-
-# Adjust current page based on button clicks
-if prev_page and current_page > 1:
-    current_page -= 1
-
-if next_page and current_page < total_pages:
-    current_page += 1
+    if st.button("Next"):
+        if st.session_state.current_page < total_pages:
+            st.session_state.current_page += 1
 
 # Sidebar - Slider for adjusting plot height
-plot_height = st.sidebar.slider("Adjust Plot Height:", min_value=100, max_value=800, value=300)
+plot_height = st.sidebar.slider("Adjust Plot Height:", min_value=200, max_value=1000, value=300)
 
 # Determine the sessions to display on the current page
-start_idx = (current_page - 1) * sessions_per_page
+start_idx = (st.session_state.current_page - 1) * sessions_per_page
 end_idx = start_idx + sessions_per_page
 current_sessions = sessions[start_idx:end_idx]
 
@@ -143,7 +143,7 @@ for level in levels:
     fig.update_layout(
         barmode='group',
         height=plot_height,
-        title=f"Level {level} - CGPA Classification Distribution",
+        title=f"{level} Level - CGPA Classification Distribution",
         xaxis_title="Distinct Student Count",
         yaxis_title="Session",
         legend_title="CGPA Classification",
@@ -173,4 +173,7 @@ for fig in figures:
 
 
 
-st.write("<br><br><br><br>", unsafe_allow_html=True)
+st.write("<br><br><br><br><br>", unsafe_allow_html=True)
+
+# Data Visualization
+st.write("# Visualization - 2")
